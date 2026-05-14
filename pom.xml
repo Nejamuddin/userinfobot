@@ -24,10 +24,10 @@
     <dependencies>
         <!-- Compile/runtime dependencies -->
         <dependency>
-            <groupId>se.anyro.tgbotapi</groupId>
-            <artifactId>tg-bot-api</artifactId>
-            <version>${tgbotapi.version}</version>
-        </dependency>
+    <groupId>org.telegram</groupId>
+    <artifactId>telegrambots</artifactId>
+    <version>6.8.0</version>
+</dependency>
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-api-1.0-sdk</artifactId>
