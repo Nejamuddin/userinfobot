@@ -20,9 +20,7 @@ public class UserInfoServlet extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-
-        if (update.hasMessage() && update.getMessage().hasText()) {
-
+        if (update.hasMessage()) {
             long chatId = update.getMessage().getChatId();
 
             SendMessage message = new SendMessage();
@@ -38,10 +36,7 @@ public class UserInfoServlet extends TelegramLongPollingBot {
     }
 
     public static void main(String[] args) throws Exception {
-
-        TelegramBotsApi botsApi =
-                new TelegramBotsApi(DefaultBotSession.class);
-
+        TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
         botsApi.registerBot(new UserInfoServlet());
     }
 }
