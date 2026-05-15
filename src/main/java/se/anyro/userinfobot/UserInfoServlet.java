@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpServer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
@@ -24,15 +25,34 @@ public class UserInfoServlet extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         try {
-            if (update.hasMessage()) {
-                long chatId = update.getMessage().getChatId();
+            if (!update.hasMessage()) return;
 
-                SendMessage msg = new SendMessage();
-                msg.setChatId(String.valueOf(chatId));
-                msg.setText("Your ID: " + chatId);
+            Message message = update.getMessage();
+            long chatId = message.getChatId();
 
-                execute(msg);
+            String text;
+
+            if (message.getForwardFrom() != null) {
+                text =
+                    "Forwarded User Info:\n\n" +
+                    "ID: " + message.getForwardFrom().getId() + "\n" +
+                    "First Name: " + message.getForwardFrom().getFirstName() + "\n" +
+                    "Username: @" + message.getForwardFrom().getUserName();
+            } else {
+                text =
+                    "Welcome to UserInfo Bot ✅\n\n" +
+                    "Your Info:\n" +
+                    "ID: " + message.getFrom().getId() + "\n" +
+                    "First Name: " + message.getFrom().getFirstName() + "\n" +
+                    "Username: @" + message.getFrom().getUserName() + "\n\n" +
+                    "Forward any message to me, I will try to show that user's ID.";
             }
+
+            SendMessage msg = new SendMessage();
+            msg.setChatId(String.valueOf(chatId));
+            msg.setText(text);
+            execute(msg);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
