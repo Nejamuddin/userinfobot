@@ -6,12 +6,10 @@ COPY . .
 
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:17
+FROM tomcat:9.0-jdk17
 
-WORKDIR /app
+COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
-COPY --from=build /app/target/*.war app.war
+EXPOSE 8080
 
-EXPOSE 10000
-
-CMD ["java", "-Dserver.port=10000", "-jar", "app.war"]
+CMD ["catalina.sh", "run"]
